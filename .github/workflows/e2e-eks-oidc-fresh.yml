@@ -85,8 +85,10 @@ jobs:
       - name: Checkout jupyter-deploy
         uses: actions/checkout@v4
         with:
-          repository: jupyter-infra/jupyter-deploy
-          ref: main
+          # TEST-ONLY: points at fork branch to validate the 2b jd-config fix.
+          # Revert to jupyter-infra/jupyter-deploy @ main before upstream PR.
+          repository: bhanderig/jupyter-deploy
+          ref: fix/e2e-config-reset-stale-chart-versions
           path: jupyter-deploy
 
       - uses: ./.github/actions/install-uv
@@ -137,8 +139,10 @@ jobs:
       - name: Checkout jupyter-deploy
         uses: actions/checkout@v4
         with:
-          repository: jupyter-infra/jupyter-deploy
-          ref: main
+          # TEST-ONLY: points at fork branch to validate the 2b jd-config fix.
+          # Revert to jupyter-infra/jupyter-deploy @ main before upstream PR.
+          repository: bhanderig/jupyter-deploy
+          ref: fix/e2e-config-reset-stale-chart-versions
           path: jupyter-deploy
 
       - uses: ./.github/actions/install-uv
@@ -293,8 +297,10 @@ jobs:
       - name: Checkout jupyter-deploy
         uses: actions/checkout@v4
         with:
-          repository: jupyter-infra/jupyter-deploy
-          ref: main
+          # TEST-ONLY: points at fork branch to validate the 2b jd-config fix.
+          # Revert to jupyter-infra/jupyter-deploy @ main before upstream PR.
+          repository: bhanderig/jupyter-deploy
+          ref: fix/e2e-config-reset-stale-chart-versions
           path: jupyter-deploy
 
       - uses: ./.github/actions/install-uv

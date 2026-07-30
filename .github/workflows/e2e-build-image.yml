@@ -63,15 +63,13 @@ jobs:
       - name: Restore CI project
         run: JD_DIR=jupyter-deploy just ci-restore sandbox-ci
 
-      # TEST-ONLY: cache-pull disabled so the build cannot reuse a stale :latest
-      # layer that bakes the old jupyter-deploy template. Restore before upstream PR.
-      # - name: Pull previous image for cache
-      #   run: JD_DIR=jupyter-deploy just ci-e2e-pull 3 latest sandbox-ci || true
+      - name: Pull previous image for cache
+        run: JD_DIR=jupyter-deploy just ci-e2e-pull 3 latest sandbox-ci || true
 
       - name: Build E2E image
         run: |
           ECR_URL=$(JD_DIR=jupyter-deploy just ci-e2e-ecr-url 3 sandbox-ci)
-          JD_DIR=jupyter-deploy just ci-e2e-build ""
+          JD_DIR=jupyter-deploy just ci-e2e-build "$ECR_URL:latest"
 
       - name: Push to ECR
         run: JD_DIR=jupyter-deploy just ci-e2e-push 3 ${{ github.sha }} sandbox-ci

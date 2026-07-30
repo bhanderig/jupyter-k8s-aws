@@ -32,8 +32,10 @@ jobs:
       - name: Checkout jupyter-deploy
         uses: actions/checkout@v4
         with:
-          repository: jupyter-infra/jupyter-deploy
-          ref: main
+          # TEST-ONLY: points at fork branch to validate the 2b jd-config fix.
+          # Revert to jupyter-infra/jupyter-deploy @ main before upstream PR.
+          repository: bhanderig/jupyter-deploy
+          ref: fix/e2e-config-reset-stale-chart-versions
           path: jupyter-deploy
 
       - uses: ./.github/actions/install-uv
@@ -61,13 +63,15 @@ jobs:
       - name: Restore CI project
         run: JD_DIR=jupyter-deploy just ci-restore sandbox-ci
 
-      - name: Pull previous image for cache
-        run: JD_DIR=jupyter-deploy just ci-e2e-pull 3 latest sandbox-ci || true
+      # TEST-ONLY: cache-pull disabled so the build cannot reuse a stale :latest
+      # layer that bakes the old jupyter-deploy template. Restore before upstream PR.
+      # - name: Pull previous image for cache
+      #   run: JD_DIR=jupyter-deploy just ci-e2e-pull 3 latest sandbox-ci || true
 
       - name: Build E2E image
         run: |
           ECR_URL=$(JD_DIR=jupyter-deploy just ci-e2e-ecr-url 3 sandbox-ci)
-          JD_DIR=jupyter-deploy just ci-e2e-build "$ECR_URL:latest"
+          JD_DIR=jupyter-deploy just ci-e2e-build ""
 
       - name: Push to ECR
         run: JD_DIR=jupyter-deploy just ci-e2e-push 3 ${{ github.sha }} sandbox-ci
